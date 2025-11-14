@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doelen App + Weekplanning</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+</head>
+<body class="has-background-secondary">
+
+  <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="#">Bit-Academy Doelen!</a>
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="mainMenu">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div id="mainMenu" class="navbar-menu">
+      <div class="navbar-end">
+        <a href="#overzicht" class="navbar-item">Vandaag</a>
+        <a href="sponsors.html" class="navbar-item">Sponsors</a>
+        <a href="#student" class="navbar-item">Student</a>
+        <a href="#weekplanning" class="navbar-item">Weekplanning</a>
+        <a href="coach.html" class="navbar-item">Coach</a>
+      </div>
+    </div>
+  </nav>
+
+  <section id="overzicht" class="section">
+    <div class="container">
+      <h1 class="title is-4">Doelen van vandaag</h1>
+      <div id="doelenLijst"></div>
+    </div>
+  </section>
+
+  <section id="student" class="section">
+    <div class="container">
+      <h1 class="title is-4">Mijn dagdoel</h1>
+      <form id="doelForm">
+        <div class="field">
+          <label class="label">Naam</label>
+          <div class="control">
+            <input id="studentNaam" class="input" type="text" placeholder="Bijv. Lisa" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Wat is jouw doel vandaag?</label>
+          <div class="control">
+            <textarea id="doelTekst" class="textarea" placeholder="Bijv. Ik wil mijn project afronden." required></textarea>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Tijdstip of duur</label>
+          <div class="control">
+            <input id="doelTijd" class="input" type="text" placeholder="Bijv. 3 uur of tot 16:00" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control">
+            <button class="button is-success is-fullwidth" type="submit">Verstuur dagdoel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+  <section id="weekplanning" class="section">
+    <div class="container">
+      <h1 class="title is-4">Weekplanning</h1>
+      <p class="subtitle">Evenementen voor de komende week.</p>
+      <div class="columns is-multiline">
+        <div class="column is-half-tablet">
+          <div class="box">
+            <h2 class="subtitle is-6"><strong>Dinsdag</strong></h2>
+            <ul>
+              <li>Bit Acadamy les 8:30 - 12:30</li>
+              <li>Pauze 10:30 - 10:45</li>
+              <li>Pauze 12:30 - 13:30</li>
+              <li>Burgerschap 13:30 - 15:30</li>
+              <li>Rekenen 15:30 - 17:30</li>
+            </ul>
+          </div>
+        </div>
+        <div class="column is-half-tablet">
+          <div class="box">
+            <h2 class="subtitle is-6"><strong>Woensdag</strong></h2>
+            <ul>
+            <li>Bit Academy les 8:30 - 16:00</li>
+            <li>Pauze 10:30 - 10:45</li>
+            <li>Pauze 12:30 - 13:15</li>
+            <li>Pauze 14:15 - 14:30</li>
+            </ul>
+          </div>
+        </div>
+        <div class="column is-half-tablet">
+          <div class="box">
+            <h2 class="subtitle is-6"><strong>Donderdag</strong></h2>
+            <ul>
+            <li>Bit Academy les 8:30 - 12:00</li>
+            <li>Pauze 10:30 - 10:45</li>
+            <li>Pauze 12:15 - 13:00</li>
+            <li>Engels 13:00 - 15:00</li>
+            <li>Nederlands 15:00 - 17:00 </li>
+            </ul>
+          </div>
+        </div>
+        <div class="column is-half-tablet">
+          <div class="box">
+            <h2 class="subtitle is-6"><strong>Vrijdag</strong></h2>
+            <ul>
+              <li>Bit Academy les 8:30 - 16:00</li>
+              <li>Pauze 10:30 - 10:45</li>
+              <li>Frituur Vrijdag 12:00 - 13:00</li>
+              <li>pauze 14:15 - 14:30</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p>Een originele website gecreëerd door <strong>Kasper de Fouw</strong></p>
+      <small>© 2025 Bit Academy. Alle rechten voorbehouden.</small>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const burger = document.querySelector('.navbar-burger');
+      const menu = document.getElementById(burger.dataset.target);
+      burger.addEventListener('click', () => {
+        burger.classList.toggle('is-active');
+        menu.classList.toggle('is-active');
+      });
+    });
+
+    const form = document.getElementById('doelForm');
+    const doelenLijst = document.getElementById('doelenLijst');
+
+    function laadDoelen() {
+      const doelen = JSON.parse(localStorage.getItem('doelen')) || [];
+      doelenLijst.innerHTML = '';
+      doelen.forEach(d => {
+        const box = document.createElement('div');
+        box.className = 'box';
+        box.innerHTML = `<strong>${d.naam}</strong> — “${d.doel}”<br><small>${d.tijd}</small>`;
+        doelenLijst.appendChild(box);
+      });
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const naam = document.getElementById('studentNaam').value.trim();
+      const doel = document.getElementById('doelTekst').value.trim();
+      const tijd = document.getElementById('doelTijd').value.trim();
+
+      if (naam && doel && tijd) {
+        const doelen = JSON.parse(localStorage.getItem('doelen')) || [];
+        doelen.push({ naam, doel, tijd, status: 'In afwachting' });
+        localStorage.setItem('doelen', JSON.stringify(doelen));
+        form.reset();
+        laadDoelen();
+        alert('Je dagdoel is opgeslagen! Coaches kunnen het nu zien.');
+      }
+    });
+
+    laadDoelen();
+  </script>
+</body>
+</html>

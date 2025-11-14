@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coach Overzicht</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+</head>
+<body class="has-background-light">
+
+  <nav class="navbar is-link" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="index.html">← Terug naar DoelenApp</a>
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="coachMenu">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div id="coachMenu" class="navbar-menu">
+      <div class="navbar-end">
+        <a href="index.html" class="navbar-item">Home</a>
+        <a href="#" class="navbar-item is-active">Coach</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <h1 class="title is-4">Coach overzicht</h1>
+      <p class="subtitle">Keur de voorgestelde dagdoelen goed of af, of verwijder ze:</p>
+      <div id="coachDoelen"></div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p><strong>Coachportaal</strong> — onderdeel van de Bit-Academy DoelenApp</p>
+      <small>© 2025 Bit Academy. Alle rechten voorbehouden.</small>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const burger = document.querySelector('.navbar-burger');
+      const menu = document.getElementById(burger.dataset.target);
+      burger.addEventListener('click', () => {
+        burger.classList.toggle('is-active');
+        menu.classList.toggle('is-active');
+      });
+    });
+
+    const container = document.getElementById('coachDoelen');
+    const doelen = JSON.parse(localStorage.getItem('doelen')) || [];
+
+    function toonDoelen() {
+      container.innerHTML = '';
+      if (doelen.length === 0) {
+        container.innerHTML = '<p>Er zijn nog geen dagdoelen ingediend.</p>';
+        return;
+      }
+
+      doelen.forEach((d, index) => {
+        const box = document.createElement('div');
+        box.className = 'box';
+        box.innerHTML = `
+          <div class="level">
+            <div class="level-left">
+              <div>
+                <p><strong>${d.naam}</strong>: “${d.doel}”</p>
+                <p><small>${d.tijd}</small></p>
+                <p>Status: <strong>${d.status}</strong></p>
+              </div>
+            </div>
+            <div class="level-right">
+              <button class="delete is-medium" title="Verwijderen" onclick="verwijderDoel(${index})"></button>
+            </div>
+          </div>
+          <div class="buttons mt-3">
+            <button class="button is-success is-small" onclick="keurDoel(${index}, 'Goedgekeurd ✅')">Goedkeuren</button>
+            <button class="button is-danger is-small" onclick="keurDoel(${index}, 'Afgekeurd ❌')">Afkeuren</button>
+          </div>
+        `;
+        container.appendChild(box);
+      });
+    }
+
+    function keurDoel(index, status) {
+      doelen[index].status = status;
+      localStorage.setItem('doelen', JSON.stringify(doelen));
+      toonDoelen();
+    }
+
+    function verwijderDoel(index) {
+      if (confirm('Weet je zeker dat je dit doel wilt verwijderen?')) {
+        doelen.splice(index, 1);
+        localStorage.setItem('doelen', JSON.stringify(doelen));
+        toonDoelen();
+      }
+    }
+
+    toonDoelen();
+  </script>
+</body>
+</html>
